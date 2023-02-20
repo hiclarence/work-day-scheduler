@@ -5,10 +5,60 @@
 
 $(function () {
   var now = dayjs()
-  console.log(now.$d);
+
+  let week = {
+    0: "Sunday", 
+    1: "Monday",
+    2: "Tueday", 
+    3: "Wednesday",
+    4: "Thursday", 
+    5: "Friday",
+    6: "Saturday"
+  }
   
-  // create p element with time stamp
-  // find the current stamp with day js
+  let month = {
+    0: "January", 
+    1: "February",
+    2: "March", 
+    3: "April",
+    4: "May", 
+    5: "June",
+    6: "July"
+  }
+
+  let hour = {
+    9: "#hour-9", 
+    10: "#hour-10",
+    11: "#hour-11", 
+    12: "#hour-12",
+    13: "#hour-13", 
+    14: "#hour-14",
+    15: "#hour-15",
+    16: "#hour-16",
+    17: "#hour-17"
+  }
+
+  let hourArray = [ "#hour-9", "#hour-10", "#hour-11", "#hour-12", "#hour-13", "#hour-14", "#hour-15", "#hour-16", "#hour-17"]
+
+  var title = $("#currentDay");
+  title.text(week[now.day()] + ", " + month[now.month()] + " "+  now.date());
+  
+
+  // var currentRow = $(hour[now.hour()]);
+  var currentRow = $(hour[11]); 
+  currentRow.addClass("present");
+  container = $("container-lg");  
+  
+  var currentIndex = hourArray.indexOf(hour[11]);
+
+  //targets past and future elements
+  for (let i = 0; i<hourArray; i++) {
+    $(hourArray[i]).addClass("past");
+    $(hourArray[i+currentIndex+1]).addClass("future");
+  };
+
+  // for every row before the present - make gray
+  // for every row after the present - make green
 
   // TODO: 
   // Add a listener for click events on the save button. This code should
