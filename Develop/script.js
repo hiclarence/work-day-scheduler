@@ -43,19 +43,35 @@ $(function () {
   var title = $("#currentDay");
   title.text(week[now.day()] + ", " + month[now.month()] + " "+  now.date());
   
-
-  // var currentRow = $(hour[now.hour()]);
-  var currentRow = $(hour[11]); 
-  currentRow.addClass("present");
-  container = $("container-lg");  
+  //selects current time 
+  var currentRow = $(hour[now.hour()]);
+  currentRow.addClass("present");  
   
-  var currentIndex = hourArray.indexOf(hour[11]);
+  var currentIndex = hourArray.indexOf(hour[now.hour()]);
+  
+  //applies all hours to be past if the hour is past working hours
+  if (now.hour() > 17) {
+    for (let i = 0; i<9; i++) {
+      $(hourArray[i]).addClass("past");
+    }
+  }
 
-  //targets past and future elements
-  for (let i = 0; i<hourArray; i++) {
+  //applies all hours to be future if the hour is prior working hours
+  if (now.hour() < 9) {
+    for (let i = 0; i<9; i++) {
+      $(hourArray[i]).addClass("future");
+    }
+  }
+
+  for (let i = 0; i<currentIndex; i++) {
     $(hourArray[i]).addClass("past");
+  };
+
+  for (let i = 0; i<(hourArray.length - currentIndex); i++) {
     $(hourArray[i+currentIndex+1]).addClass("future");
   };
+  
+
 
   // for every row before the present - make gray
   // for every row after the present - make green
