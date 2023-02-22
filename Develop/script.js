@@ -6,26 +6,6 @@
 $(function () {
   var now = dayjs()
 
-  let week = {
-    0: "Sunday", 
-    1: "Monday",
-    2: "Tueday", 
-    3: "Wednesday",
-    4: "Thursday", 
-    5: "Friday",
-    6: "Saturday"
-  }
-  
-  let month = {
-    0: "January", 
-    1: "February",
-    2: "March", 
-    3: "April",
-    4: "May", 
-    5: "June",
-    6: "July"
-  }
-
   let hour = {
     9: "#hour-9", 
     10: "#hour-10",
@@ -40,41 +20,59 @@ $(function () {
 
   let hourArray = [ "#hour-9", "#hour-10", "#hour-11", "#hour-12", "#hour-13", "#hour-14", "#hour-15", "#hour-16", "#hour-17"]
 
-  var title = $("#currentDay");
-  title.text(week[now.day()] + ", " + month[now.month()] + " "+  now.date());
+  let entryArray =[];
+
+  //sets for the current class 
+  $("#currentDay").text(now.format('dddd, MMMM D YYYY'));
   
   //selects current time 
   var currentRow = $(hour[now.hour()]);
   currentRow.addClass("present");  
   
   var currentIndex = hourArray.indexOf(hour[now.hour()]);
+
   
-  //applies all hours to be past if the hour is past working hours
+  //applies class if the hours are outside working hours
   if (now.hour() > 17) {
     for (let i = 0; i<9; i++) {
       $(hourArray[i]).addClass("past");
     }
-  }
-
-  //applies all hours to be future if the hour is prior working hours
-  if (now.hour() < 9) {
+  } else if (now.hour() < 9){
     for (let i = 0; i<9; i++) {
       $(hourArray[i]).addClass("future");
-    }
+      }
   }
 
-  for (let i = 0; i<currentIndex; i++) {
-    $(hourArray[i]).addClass("past");
-  };
+  //applies class if inside working hours
+  if ((now.hour()<18) && (now.hour()>8)) {
+    for (let i = 0; i<currentIndex; i++) {
+      $(hourArray[i]).addClass("past");
+    };
+    for (let i = 0; i<(hourArray.length - currentIndex); i++) {
+      $(hourArray[i+currentIndex+1]).addClass("future");
+    }; 
+  }
 
-  for (let i = 0; i<(hourArray.length - currentIndex); i++) {
-    $(hourArray[i+currentIndex+1]).addClass("future");
-  };
-  
+  for (var i = 0; i<hourArray.length; i++) {
+    $(hourArray[i]).find("button").click(function() {
+      let aInput = $(this).parent().children()[1].value;
+      console.log(aInput);
+      console.log($(this).parent().attr('id'));
 
+      userEntry = {
+        time : $(this).parent().attr('id'),
+        text : aInput
+      }
+      entryArray.push(userEntry);
+      console.log(entryArray);
 
-  // for every row before the present - make gray
-  // for every row after the present - make green
+      localStorage.setItem($(this).parent().attr('id'), aInput);
+    }
+    );
+  }
+
+}); 
+
 
   // TODO: 
   // Add a listener for click events on the save button. This code should
@@ -91,20 +89,6 @@ $(function () {
   // - How might the id be useful when saving the description in local storage?
   //
   // =====================================
-  // 
-  // TODO: 
-  // Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. 
-  // Use day js to find the current time stamp
-  // if the event happened in the past, color events gray, current - red, future - green
-  // 
-  // HINTS: 
-  // - How can the id attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? 
-  
-  // - How can Day.js be used to get the current hour in 24-hour time?
-  //
-  // =====================================
   //
   // TODO: 
   // Add code to get any user input that was saved in localStorage and set
@@ -116,7 +100,4 @@ $(function () {
   // 
   // HINT: How can the id attribute of each time-block be used to do this?
   //
-  // =====================================
-  //
-  // TODO: Add code to display the current date in the header of the page.
-});
+
