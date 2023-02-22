@@ -2,35 +2,25 @@ $(function () {
   
   var now = dayjs()
 
-  let hour = {
-    9: "#hour-9", 
-    10: "#hour-10",
-    11: "#hour-11", 
-    12: "#hour-12",
-    13: "#hour-13", 
-    14: "#hour-14",
-    15: "#hour-15",
-    16: "#hour-16",
-    17: "#hour-17"
-  }
 
   let hourArray = [ "#hour-9", "#hour-10", "#hour-11", "#hour-12", "#hour-13", "#hour-14", "#hour-15", "#hour-16", "#hour-17"]
 
-  //loads value from localstorage
+  //loads values from local storage
   for (var i=0; i<9; i++) {
     if (localStorage.getItem('hour-'.concat(i+9)) != null) {
       $(hourArray[i]).children()[1].value = localStorage.getItem('hour-'.concat(i+9));
     };
   }
 
-  //sets for the current class 
+  //sets the time for the heading
   $("#currentDay").text(now.format('dddd, MMMM D YYYY'));
   
   //selects current time 
-  var currentRow = $(hour[now.hour()]);
+  var currentRow = $('#hour-'.concat(now.hour()));
+
   currentRow.addClass("present");  
   
-  var currentIndex = hourArray.indexOf(hour[now.hour()]);
+  var currentIndex = hourArray.indexOf('#hour-'.concat(now.hour()));
 
   
   //applies class if the hours are outside working hours
@@ -62,7 +52,6 @@ $(function () {
     }
     );
   }
-
 
 }); 
 
